@@ -20,7 +20,7 @@
 #    - grub_default.stat.exists is defined
 #    - not grub_default.stat.exists
 
-- name: "Remove all comments and empty lines"
+- name: "Cleaning default file, remove all comments and empty lines"
   ansible.builtin.lineinfile:
     path: "{{ grub_default_path }}"
     regexp: "{{ item }}"
@@ -29,7 +29,7 @@
     - '^#'
     - '^$'
 
-- name: "Set grub options"
+- name: "Set complete grub options"
   ansible.builtin.lineinfile:
     path: "{{ grub_default_path }}"
     regexp: "^{{ item.name }}="
@@ -43,7 +43,7 @@
   notify:
     - Update grub
 
-- name: "Add options to GRUB_CMDLINE_LINUX"
+- name: "Add options to existing GRUB_CMDLINE_LINUX"
   ansible.builtin.replace:
     path: "{{ grub_default_path }}"
     regexp: '^GRUB_CMDLINE_LINUX="((:?(?!{{ item.option }}={{ item.value }}).)*?)"$'
@@ -77,8 +77,8 @@
 - name: "Change content on grud.d config files"
   ansible.builtin.replace:
     path: "/etc/grub.d/{{ item.file }}"
-    regexp: '^{{ item.regex }}"((:?(?!{{ item.value }}).)*?)"$'
-    replace: '{{ item.regex }}"\1 {{ item.value }}"'
+    regexp: "{{ item.regex }}"
+    replace: "{{ item.value }}"
   notify:
     - Update grub
   with_items:
