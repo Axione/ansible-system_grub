@@ -4,11 +4,6 @@
   become: true
   any_errors_fatal: true
 
-  tasks:
-    - name: Include role
-      ansible.builtin.include_role:
-        name: ansible-system_grub
-
   vars:
     grub_timeout: 5
     grub_recordfail_timeout: "5"
@@ -20,3 +15,8 @@
       - file: 10_linux
         regex: "CLASS="
         value: "--unrestricted"
+
+  tasks:
+    - name: Include role
+      ansible.builtin.include_role:
+        name: ansible-system_grub
