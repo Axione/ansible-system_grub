@@ -4,21 +4,21 @@
     name: "{{ grub_packages }}"
     state: present
 
-#- name: "Check if /etc/default/grub exist"
-#  ansible.builtin.stat:
-#    path: /etc/default/grub
-#  register: grub_default
+# - name: "Check if /etc/default/grub exist"
+#   ansible.builtin.stat:
+#     path: /etc/default/grub
+#   register: grub_default
 #
-#- name: "Create /etc/default/grub"
-#  ansible.builtin.file:
-#    path: /etc/default/grub
-#    state: touch
-#    owner: root
-#    group: root
-#    mode: 0644
-#  when:
-#    - grub_default.stat.exists is defined
-#    - not grub_default.stat.exists
+# - name: "Create /etc/default/grub"
+#   ansible.builtin.file:
+#     path: /etc/default/grub
+#     state: touch
+#     owner: root
+#     group: root
+#     mode: 0644
+#   when:
+#     - grub_default.stat.exists is defined
+#     - not grub_default.stat.exists
 
 - name: "Cleaning default file, remove all comments and empty lines"
   ansible.builtin.lineinfile:
@@ -26,15 +26,15 @@
     regexp: "{{ item }}"
     state: absent
   loop:
-    - '^#'
-    - '^$'
+    - "^#"
+    - "^$"
 
 - name: "Set complete grub options"
   ansible.builtin.lineinfile:
     path: "{{ grub_default_path }}"
     regexp: "^{{ item.name }}="
-    line: "{{ item.name }}=\"{{ item.value }}\""
-    #validate: "{{ _grub_validation[ansible_distribution] | default(_grub_validation['default']) }} /etc/default/grub"
+    line: '{{ item.name }}="{{ item.value }}"'
+    # validate: "{{ _grub_validation[ansible_distribution] | default(_grub_validation['default']) }} /etc/default/grub"
     create: true
     mode: "0664"
   with_items: "{{ grub_options }}"
@@ -93,7 +93,7 @@
     path: "{{ grub_boot_path }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
   when: grub_sec_bootloader|bool
 
 - name: "Flush handlers"
