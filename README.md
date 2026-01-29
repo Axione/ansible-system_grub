@@ -45,7 +45,7 @@ With default variables, this role dont change anything on the system. You need t
           vars:
             grub_options:
               - name: GRUB_DISTRIBUTOR
-                value: "{{ ansible_distribution }}"
+                value: "{{ ansible_facts.distribution }}"
               - name: GRUB_TIMEOUT
                 value: 4
               - name: GRUB_CMDLINE_LINUX
